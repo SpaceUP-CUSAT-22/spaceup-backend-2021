@@ -80,7 +80,7 @@ ROOT_URLCONF = 'config.urls'
 
 # you need to change this if you ar not using localhost and 8080 port
 
-DEPLOYMENT_URL = 'http://127.0.0.1:8080/'
+DEPLOYMENT_URL = 'http://127.0.0.1:8000'
 
 TEMPLATES = [
     {

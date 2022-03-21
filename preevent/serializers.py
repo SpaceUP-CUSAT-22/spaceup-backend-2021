@@ -24,3 +24,6 @@ class GetSeatBookingSerializer(serializers.ModelSerializer):
         model = SeatBooking
         fields = ['event', 'seat_number', 'payment_status']
 
+        extra_kwargs = {
+            'payment_status': {'read_only': True},
+        }

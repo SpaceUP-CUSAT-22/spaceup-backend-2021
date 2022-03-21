@@ -45,7 +45,7 @@ year_select = (
 class Volunteers(models.Model):
     name = models.CharField(max_length=25)
     year_of_study = models.IntegerField(choices=year_select, default=2)
-    course = models.CharField(max_length=30, choices=course_select)
+    course = models.CharField(max_length=45, choices=course_select)
     email = models.EmailField(blank=True, null=True)
     mobile_number = models.CharField(max_length=12)
     profile = models.ImageField(upload_to='images/', null=True, blank=True)

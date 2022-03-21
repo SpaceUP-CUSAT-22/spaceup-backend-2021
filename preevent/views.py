@@ -27,7 +27,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
 
 class SeatBookingViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', ]
+    http_method_names = ['get', 'post']
     queryset = SeatBooking.objects.all()
     serializer_class = GetSeatBookingSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -38,17 +38,19 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["post"], url_path='book')
     def book(self, request, *args, **kwargs):
         cancel_last_payment_links(request.user)
-        seats = request.data.get('selected_seats')
-
+        logger.info(request.data)
+        seats = request.data['selected_seats']
+        logger.info(seats)
         event = Event.objects.all().first()
         seat, available = check_available_seats(event, seats)
         if not available:
             return Response({"detail": f"requested seat {seat} not available please book another"})
-
+        logger.info('seats are available')
         amount = event.booking_price * len(seats)
         payment_url, transaction_details = get_payment_link(request.user, amount, seats)
         if payment_url:
             return Response({"payment_url": payment_url})
+        return Response({"detail": "error anh monuse"})
 
 
 @api_view(["GET"])

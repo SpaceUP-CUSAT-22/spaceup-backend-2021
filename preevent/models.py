@@ -20,7 +20,7 @@ class Event(models.Model):
     title = models.CharField(max_length=25)
     type = models.CharField(max_length=20, choices=event_types)
     description = models.TextField()
-    venue = models.CharField(help_text='venue name')
+    venue = models.CharField(help_text='venue name', max_length=30)
     venue_location = models.CharField(max_length=150, help_text="full location link")
     mentors = models.ManyToManyField(Mentors)
     volunteers = models.ManyToManyField(Volunteers)
@@ -63,8 +63,7 @@ def create_new_transaction_id():
 
 
 class TransactionDetails(models.Model):
-    seat_bookings = models.ManyToManyField(SeatBooking, related_name="transaction", on_delete=models.CASCADE, null=True,
-                                           blank=True)
+    seat_bookings = models.ManyToManyField(SeatBooking, related_name="transaction", )
     total = models.FloatField(default=0)
     # to store the random generated unique id
     transaction_id = models.CharField(max_length=10, default=create_new_transaction_id)
@@ -74,3 +73,4 @@ class TransactionDetails(models.Model):
     payment_status = models.CharField(max_length=20, default="failed")
     date = models.DateField(auto_now=True, blank=True, null=True)
     seat_numbers = ArrayField(models.CharField(max_length=10))
+    event = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)

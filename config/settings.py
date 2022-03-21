@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'auth_login',
     'authentication',
     'home',
+    'preevent',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ ROOT_URLCONF = 'config.urls'
 
 # you need to change this if you ar not using localhost and 8080 port
 
-DEPLOYMENT_URL = 'http://127.0.0.1:8000'
+DEPLOYMENT_URL = 'https://api.spaceupcusat.org'
 
 TEMPLATES = [
     {
@@ -109,24 +110,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-if not DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': 'localhost',
-            'PORT': os.environ.get('DB_PORT'),
-        }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': os.environ.get('DB_PORT'),
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'spaceup',
-        }
-    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -488,7 +482,7 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "solar",
 }
 
-REQUEST_VIEWER = {
-    "LIVE_MONITORING": True,
-    "WHITELISTED_PATH": [ADMIN_URL, 'auth/', 'login/', 'google-login/', 'signup/']
-}
+# REQUEST_VIEWER = {
+#     "LIVE_MONITORING": True,
+#     "WHITELISTED_PATH": [ADMIN_URL, 'auth/', 'login/', 'google-login/', 'signup/']
+# }

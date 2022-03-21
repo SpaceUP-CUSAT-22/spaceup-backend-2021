@@ -16,13 +16,15 @@ def cancel_last_payment_links(user):
     transaction_details = TransactionDetails.objects.filter(user=user, payment_status="created")
     key_secret = settings.razorpay_key_secret
     key_id = settings.razorpay_key_id
-    for transaction in transaction_details:
-        url = f'https://api.razorpay.com/v1/payment_links/{transaction.payment_id}/cancel'
-        logger.info(f"canceling  {transaction.payment_id}")
-        requests.post(url,
-                      headers={'Content-type': 'application/json'},
-                      auth=HTTPBasicAuth(key_id, key_secret))
-        transaction.delete()
+    if transaction_details:
+        for transaction in transaction_details:
+            url = f'https://api.razorpay.com/v1/payment_links/{transaction.payment_id}/cancel'
+            logger.info(f"canceling  {transaction.payment_id}")
+            requests.post(url,
+                          headers={'Content-type': 'application/json'},
+                          auth=HTTPBasicAuth(key_id, key_secret))
+            transaction.delete()
+    logger.info('canceling completed')
 
 
 def get_payment_link(user, amount, seats):
@@ -52,16 +54,16 @@ def get_payment_link(user, amount, seats):
             "callback_method": "get",
             'reference_id': transaction_details.transaction_id,
             "customer": {
-                "contact": user.tokens.mobile_number,
+                "contact": user.tokens.phone_number,
                 "email": user.email,
-                "name": f"{user.firstname} {user.lastname}"
+                "name": f"{user.username}"
             },
             "options": {
                 "checkout": {
                     "name": "DreamEat",
                     "prefill": {
                         "email": user.email,
-                        "contact": user.tokens.mobile_number
+                        "contact": user.tokens.phone_number
                     },
                     "readonly": {
                         "email": True,
@@ -94,8 +96,10 @@ def get_payment_link(user, amount, seats):
 
 
 def check_available_seats(event: Event, seats):
+    logger.info(f'checking availaility of seats {seats} for {event.title}')
     for seat in seats:
-        if seat not in event.available_seats:
+        print(seat, event.available_seats)
+        if str(seat) not in event.available_seats:
             return seat, False
     return True, True
 
@@ -124,6 +128,18 @@ def verify_signature(request):
         logger.warning(e)
 
 
+def cancel_payment_link(seat, pid):
+    transaction = TransactionDetails.objects.filter(seat_numbers__contains=[seat]).exclude(id=pid)
+    print(transaction)
+    key_secret = settings.razorpay_key_secret
+    key_id = settings.razorpay_key_id
+    url = f'https://api.razorpay.com/v1/payment_links/{transaction.payment_id}/cancel'
+    logger.info(f"canceling  {transaction.payment_id}")
+    requests.post(url,
+                  headers={'Content-type': 'application/json'},
+                  auth=HTTPBasicAuth(key_id, key_secret))
+
+
 def handle_payment(transaction_id, payment_status):
     try:
         logger.info(transaction_id)
@@ -133,10 +149,12 @@ def handle_payment(transaction_id, payment_status):
         transaction_details.save()
 
         for seat in transaction_details.seat_numbers:
+            cancel_payment_link(seat, transaction_details.id)
             SeatBooking.objects.create(user=transaction_details.user, payment_status=True,
                                        seat_number=seat,
                                        event=transaction_details.event)
             transaction_details.event.booked_seats.append(seat)
+            transaction_details.event.save()
 
     except Exception as ex:
-        logger.critical(f"order not created exception {ex} ")
+        logger.critical(f"order not created exception {ex}")

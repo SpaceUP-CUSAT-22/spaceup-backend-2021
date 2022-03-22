@@ -96,7 +96,7 @@ def get_payment_link(user, amount, seats):
 
 
 def check_available_seats(event: Event, seats):
-    logger.info(f'checking availaility of seats {seats} for {event.title}')
+    logger.info(f'checking availability of seats {seats} for {event.title}')
     for seat in seats:
         print(seat, event.available_seats)
         if str(seat) not in event.available_seats:
@@ -158,3 +158,4 @@ def handle_payment(transaction_id, payment_status):
 
     except Exception as ex:
         logger.critical(f"order not created exception {ex}")
+

@@ -10,7 +10,7 @@ from config import settings
 from .models import Event, SeatBooking
 from .serializers import GetEventSerializer, GetSeatBookingSerializer
 from .utils import cancel_last_payment_links, get_payment_link, verify_signature, handle_payment
-
+from authentication.models import Tokens
 logger = logging.getLogger('home')
 
 
@@ -57,6 +57,11 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
             return Response({"detail": "selected_seats must be a number greater than 0"},
                             status=status.HTTP_406_NOT_ACCEPTABLE)
 
+    # TODO make this for vol
+    @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAdminUser])
+    def verify(self, request, *args, **kwargs):
+        token = request.data['token']
+        Tokens.objects.get(token=token)
 
 @api_view(["GET"])
 def payment(request):

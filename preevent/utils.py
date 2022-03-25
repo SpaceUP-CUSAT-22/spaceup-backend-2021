@@ -95,15 +95,6 @@ def get_payment_link(user, amount, seats, event=None):
         return [False, False]
 
 
-#
-# def check_available_seats(event: Event, seats):
-#     logger.info(f'checking availability of seats {seats} for {event.title}')
-#     for seat in seats:
-#         print(seat, event.available_seats)
-#         if str(seat) not in event.available_seats:
-#             return seat, False
-#     return True, True
-
 
 def verify_signature(request):
     logger.info("Signature verification taking place")

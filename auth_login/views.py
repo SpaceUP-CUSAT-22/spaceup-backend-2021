@@ -206,6 +206,7 @@ def Google_login(request):
         access_token = convert_google_token(token, client_id)
         if access_token:
             user = AccessToken.objects.get(token=access_token).user
+
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             try:
 

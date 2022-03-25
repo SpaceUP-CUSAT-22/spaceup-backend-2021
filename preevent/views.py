@@ -9,7 +9,7 @@ import logging
 from config import settings
 from .models import Event, SeatBooking
 from .serializers import GetEventSerializer, GetSeatBookingSerializer
-from .utils import cancel_last_payment_links, get_payment_link, check_available_seats, verify_signature, handle_payment
+from .utils import cancel_last_payment_links, get_payment_link, verify_signature, handle_payment
 
 logger = logging.getLogger('home')
 
@@ -39,18 +39,19 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
     def book(self, request, *args, **kwargs):
         cancel_last_payment_links(request.user)
         logger.info(request.data)
-        seats = request.data['selected_seats']
+        seats = request.data['seats']
         logger.info(seats)
+        #TODO make this one from user input
         event = Event.objects.all().first()
-        seat, available = check_available_seats(event, seats)
-        if not available:
-            return Response({"detail": f"requested seat {seat} not available please book another"})
-        logger.info('seats are available')
-        amount = event.booking_price * len(seats)
-        payment_url, transaction_details = get_payment_link(request.user, amount, seats)
-        if payment_url:
-            return Response({"payment_url": payment_url})
-        return Response({"detail": "error anh monuse"})
+        if type(seats) == type(1) and seats > 0:
+            amount = event.booking_price * seats
+            payment_url, transaction_details = get_payment_link(request.user, amount, seats, event)
+            if payment_url:
+                return Response({"payment_url": payment_url})
+            return Response({"detail": "error anh monuse"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            return Response({"detail": "selected_seats must be a number greater than 0"},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
 
 
 @api_view(["GET"])

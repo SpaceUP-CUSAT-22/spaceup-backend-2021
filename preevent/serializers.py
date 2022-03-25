@@ -22,7 +22,7 @@ class GetEventSerializer(serializers.ModelSerializer):
 class GetSeatBookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeatBooking
-        fields = ['event', 'seat_number', 'payment_status']
+        fields = ['event', 'seats', 'payment_status']
 
         extra_kwargs = {
             'payment_status': {'read_only': True},

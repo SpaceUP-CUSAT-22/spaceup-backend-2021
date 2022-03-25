@@ -27,15 +27,8 @@ class Event(models.Model):
     poster = models.ImageField(upload_to='images/', null=True, blank=True)
     hall_name = models.CharField(max_length=20)
     seat_booking_status = models.BooleanField(default=False)
-    seats = ArrayField(models.CharField(max_length=10), blank=True, null=True)
-    booked_seats = ArrayField(models.CharField(max_length=10), blank=True, null=True)
     booking_price = models.FloatField(validators=[MinValueValidator(0)])
-
-    @property
-    def available_seats(self):
-        if self.seat_booking_status:
-            return list(set(self.seats) - set(self.booked_seats))
-        return []
+    total_seats = models.PositiveIntegerField(default=100)
 
     def __str__(self):
         return self.title
@@ -44,8 +37,8 @@ class Event(models.Model):
 class SeatBooking(models.Model):
     user = models.ForeignKey(User, related_name='booking', on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)
-    seat_number = models.CharField(max_length=10)
     payment_status = models.BooleanField(default=False)
+    seats = models.PositiveIntegerField(default=1)
 
 
 def code_generator(size=10, chars=string.ascii_uppercase + string.digits):
@@ -63,7 +56,9 @@ def create_new_transaction_id():
 
 
 class TransactionDetails(models.Model):
-    seat_bookings = models.ManyToManyField(SeatBooking, related_name="transaction", )
+    seat_booking = models.ForeignKey(SeatBooking, related_name="transaction",
+                                     on_delete=models.SET_NULL, blank=True,
+                                     null=True)
     total = models.FloatField(default=0)
     # to store the random generated unique id
     transaction_id = models.CharField(max_length=10, default=create_new_transaction_id)
@@ -72,5 +67,5 @@ class TransactionDetails(models.Model):
     payment_id = models.CharField(max_length=20, default="")
     payment_status = models.CharField(max_length=20, default="failed")
     date = models.DateField(auto_now=True, blank=True, null=True)
-    seat_numbers = ArrayField(models.CharField(max_length=10))
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)
+    seats = models.PositiveIntegerField(default=0)

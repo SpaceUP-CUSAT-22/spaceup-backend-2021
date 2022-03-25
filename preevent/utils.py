@@ -27,7 +27,7 @@ def cancel_last_payment_links(user):
     logger.info('canceling completed')
 
 
-def get_payment_link(user, amount, seats):
+def get_payment_link(user, amount, seats, event=None):
     """
     This Function returns thr payment url for that particular checkout
     Returns a list with payment link and payment id created by razorpay
@@ -39,7 +39,7 @@ def get_payment_link(user, amount, seats):
     cancel_last_payment_links(user)
 
     transaction_details = TransactionDetails(user=user,
-                                             total=amount, seat_numbers=seats)
+                                             total=amount, seats=seats, event=event)
     transaction_details.save()
     logger.info(f"created transaction details object for {user}")
     amount *= 100
@@ -95,13 +95,14 @@ def get_payment_link(user, amount, seats):
         return [False, False]
 
 
-def check_available_seats(event: Event, seats):
-    logger.info(f'checking availability of seats {seats} for {event.title}')
-    for seat in seats:
-        print(seat, event.available_seats)
-        if str(seat) not in event.available_seats:
-            return seat, False
-    return True, True
+#
+# def check_available_seats(event: Event, seats):
+#     logger.info(f'checking availability of seats {seats} for {event.title}')
+#     for seat in seats:
+#         print(seat, event.available_seats)
+#         if str(seat) not in event.available_seats:
+#             return seat, False
+#     return True, True
 
 
 def verify_signature(request):
@@ -147,15 +148,9 @@ def handle_payment(transaction_id, payment_status):
         transaction_details.payment_status = payment_status
         logger.info(f"payment status {transaction_details.payment_status}")
         transaction_details.save()
-
-        for seat in transaction_details.seat_numbers:
-            cancel_payment_link(seat, transaction_details.id)
-            SeatBooking.objects.create(user=transaction_details.user, payment_status=True,
-                                       seat_number=seat,
-                                       event=transaction_details.event)
-            transaction_details.event.booked_seats.append(seat)
-            transaction_details.event.save()
-
+        SeatBooking.objects.create(user=transaction_details.user,
+                                   payment_status=True,
+                                   seats=transaction_details.seats,
+                                   event=transaction_details.event)
     except Exception as ex:
         logger.critical(f"order not created exception {ex}")
-

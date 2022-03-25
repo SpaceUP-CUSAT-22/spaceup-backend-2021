@@ -40,9 +40,13 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
         cancel_last_payment_links(request.user)
         logger.info(request.data)
         seats = request.data['seats']
+        event = request.data['event']
         logger.info(seats)
-        #TODO make this one from user input
-        event = Event.objects.all().first()
+        try:
+            event = Event.objects.get(id=event)
+        except Event.DoesNotExist:
+            event = Event.objects.all().first()
+
         if type(seats) == type(1) and seats > 0:
             amount = event.booking_price * seats
             payment_url, transaction_details = get_payment_link(request.user, amount, seats, event)

@@ -1,4 +1,4 @@
-from billiard.five import string
+import string
 from django.db import models
 from django.contrib.auth.models import User
 import random
@@ -19,10 +19,14 @@ def create_new_id():
 
 
 class Tokens(models.Model):
-    private_token = models.CharField(max_length=10, unique=True, default=create_new_id)
+    private_token = models.CharField(max_length=10, blank=True, null=True, unique=True, default=create_new_id)
     user = models.OneToOneField(User, related_name='tokens', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=12, default="")
     profile = models.ImageField(upload_to='images', blank=True, null=True)
 
     def __str__(self):
         return f"{self.user} "
+
+    def rest_token(self):
+        self.private_token = create_new_id
+        self.save()

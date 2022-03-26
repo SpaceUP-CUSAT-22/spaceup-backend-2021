@@ -7,10 +7,11 @@ from rest_framework.response import Response
 import logging
 
 from config import settings
-from .models import Event, SeatBooking
-from .serializers import GetEventSerializer, GetSeatBookingSerializer
+from .models import Event, SeatBooking, Question
+from .serializers import GetEventSerializer, GetSeatBookingSerializer, QuestionsSerializer
 from .utils import cancel_last_payment_links, get_payment_link, verify_signature, handle_payment
 from authentication.models import Tokens
+
 logger = logging.getLogger('home')
 
 
@@ -63,6 +64,7 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
         token = request.data['token']
         Tokens.objects.get(token=token)
 
+
 @api_view(["GET"])
 def payment(request):
     print(request)
@@ -74,3 +76,18 @@ def payment(request):
     else:
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     return HttpResponseRedirect(settings.webhook_redirect_url)
+
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    http_method_names = ['get', 'post']
+    queryset = Question.objects.all()
+    serializer_class = QuestionsSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if self.request.user.is_staff():
+            return Question.objects.all()
+        return Question.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

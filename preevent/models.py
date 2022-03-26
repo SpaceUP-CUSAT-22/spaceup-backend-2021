@@ -69,3 +69,8 @@ class TransactionDetails(models.Model):
     date = models.DateField(auto_now=True, blank=True, null=True)
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)
     seats = models.PositiveIntegerField(default=0)
+
+
+class Question(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    question = models.TextField()

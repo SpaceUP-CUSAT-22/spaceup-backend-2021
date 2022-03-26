@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Event, SeatBooking
+from .models import Event, SeatBooking, Question
 
 
 class GetEventSerializer(serializers.ModelSerializer):
@@ -26,4 +26,14 @@ class GetSeatBookingSerializer(serializers.ModelSerializer):
 
         extra_kwargs = {
             'payment_status': {'read_only': True},
+        }
+
+
+class QuestionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ['user', 'question']
+
+        extra_kwargs = {
+            'user': {'read_only': True},
         }

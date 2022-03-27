@@ -6,15 +6,35 @@
 {% endblock %}
 
 {% block body %}
-<section class="" style=" overflow-x: hidden" >
-  <div class="bg  " >
-    <div class="row d-flex align-items-center justify-content-center h-100">
+    <body >
+        <div class="bg-home">
+            <img   class="bg-image" src="{% static 'img/earth.png' %}">
+        </div>
+
+        <span class="shoot-star star-1">
+        <img src="{% static 'img/shoot.png' %}" alt="" />
+      </span>
+
+
+
+      <span class="shoot-star star-3">
+        <img src="{% static 'img/shoot.png' %}" alt="" />
+      </span>
+
+
+
+    <section class="" style=" overflow-x: hidden" >
+  <div class="bg " >
+    <div class="row d-flex align-items-center justify-content-center h-100" >
          {% block form %}
 
         {% endblock %}
     </div>
   </div>
 </section>
+
+    </body>
+
 
 {% endblock %}
 

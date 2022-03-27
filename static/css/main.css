@@ -1,6 +1,74 @@
 body {
     font-family: Poppins;
+
 }
+.bg-home{
+    position:fixed;
+    z-index: -1000;
+    width: 100vw;
+    height: 100vh;
+    animation: pic 6s ease-out 1;
+}
+
+@keyframes pic{
+    from{
+        width: 200vw;
+        height: 120vh;
+    }
+    to{
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.shoot-star {
+  position: fixed;
+  width: 90px;
+  height: 90px;
+  z-index: 0;
+}
+
+.star-1 {
+  animation: star1 4s ease-out infinite;
+  top: 0;
+  left: 0;
+}
+
+@keyframes star1 {
+  from {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(600px, 300px);
+    opacity: 0;
+  }
+}
+
+
+
+.star-3 {
+  animation: star3 4s ease-out 7s infinite;
+  top: -10%;
+  left: 30%;
+}
+
+@keyframes star3 {
+  from {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(600px, 300px);
+    opacity: 0;
+  }
+}
+
+.shoot-star img{
+    width: 100%;
+    height: 100%;
+}
+
 
 .back {
     margin-top: 13px;
@@ -11,6 +79,7 @@ body {
     top: 0;
     position: absolute;
     z-index: 2;
+
 }
 
 .back-icon {
@@ -49,7 +118,7 @@ body {
 }
 
 .signin-link {
-    color: #DD2C00;
+    color: #f36e2c;
 }
 
 .signin-link:active {
@@ -64,11 +133,18 @@ body {
     height: 100vh;
     width: 100%;
     object-fit: cover;
+    background-color: #719ECE;
 }
 
 .password-container {
     position: relative;
 }
+
+.form-control::-webkit-input-placeholder { color: white; }  /* WebKit, Blink, Edge */
+.form-control:-moz-placeholder { color: white; }  /* Mozilla Firefox 4 to 18 */
+.form-control::-moz-placeholder { color: white; }  /* Mozilla Firefox 19+ */
+.form-control:-ms-input-placeholder { color: white; }  /* Internet Explorer 10-11 */
+.form-control::-ms-input-placeholder { color: white; }  /* Microsoft Edge */
 
 .password-input {
     padding-right: 54px !important;
@@ -76,7 +152,7 @@ body {
 
 .visibility {
     cursor: pointer;
-    color: #0c0c0c;
+    color: #777;
     position: absolute;
     margin-top: 22px;
     margin-right: 14px;
@@ -89,12 +165,14 @@ body {
 }
 
 .submit-btn {
-    background-color: #FFFFFF;
+    background-color: #f36e2c;
     color: white;
     height: 64px;
     width: 348px;
     text-transform: none;
-    font-size: 1.2rem
+    font-size: 1.2rem;
+    border:1px solid #f36e2c;
+
 }
 
 .submit-btn:hover {
@@ -207,9 +285,7 @@ body {
 
 @media only screen and (max-width: 768px) {
     /* For small devices: */
-    .bg-image {
-        display: none;
-    }
+
 
     .back {
         display: none;

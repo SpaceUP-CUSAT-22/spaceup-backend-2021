@@ -59,7 +59,6 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
             return Response({"detail": "selected_seats must be a number greater than 0"},
                             status=status.HTTP_406_NOT_ACCEPTABLE)
 
-    # TODO make this for vol
     @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAuthenticated])
     def verify(self, request, *args, **kwargs):
         context = {}
@@ -74,7 +73,8 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
                 except Tokens.DoesNotExist:
                     pass
             try:
-                user = Tokens.objects.get(private_token=token).user
+                token = request.data.get('token')
+                user = Tokens.objects.filter(private_token=token)
                 SeatBooking.objects.filter(user=user)
                 context['to_verify_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=False)]
                 context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]

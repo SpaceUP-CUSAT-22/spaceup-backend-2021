@@ -1,0 +1,28 @@
+{% extends 'root.html' %}
+{% load static %}
+{% block title %}
+    Sign In
+{% endblock %}
+
+{% block form %}
+
+    <div style="height: 100%; " class="col-md-4 pt-5">
+
+
+        <div style="color:#fff;" class="row d-flex align-items-center mt-4">
+            <figure style="color: #ffffff " class="text-center"><h1 class="fw-bold">Login</h1>
+            </figure>
+            <form action="/preevent/seats/verify?{{ request.META.QUERY_STRING }}"
+                  method="POST">
+                {% csrf_token %}
+                {% if pswderr %}
+                    <div class=" text-danger text-center" role="alert">
+                        <i class="fa fa-exclamation-circle"></i> {{ pswderr }}
+                    </div>
+                {% endif %}
+                {{ name }}
+            </form>
+        </div>
+
+    </div>
+{% endblock %}

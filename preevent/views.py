@@ -62,10 +62,12 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
     # TODO make this for vol
     @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAdminUser])
     def verify(self, request, *args, **kwargs):
+        context = {}
+
         if request.user.tokens.is_volunteer():
-            context = {}
-            return render(request, template_name="signup.html", context=context)
-        return render(request, template_name="signup.html", context=context)
+            context['name'] = 'sunith'
+            return render(request, template_name="verify.html", context=context)
+        return render(request, template_name="ticket.html", context=context)
 
         # token = request.data['token']
         # Tokens.objects.get(token=token)

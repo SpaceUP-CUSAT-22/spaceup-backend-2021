@@ -4,28 +4,23 @@ from .models import Event, SeatBooking, Question
 
 
 class GetEventSerializer(serializers.ModelSerializer):
-    available_seats = serializers.SerializerMethodField()
-
     class Meta:
         model = Event
         fields = [
             'title', 'type', 'description', 'venue',
             'venue_location', 'mentors', 'volunteers',
-            'poster', 'seat_booking_status', 'available_seats'
+            'poster', 'seat_booking_status',
         ]
-
-    @staticmethod
-    def get_available_seats(event):
-        return event.available_seats
 
 
 class GetSeatBookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeatBooking
-        fields = ['event', 'seats', 'payment_status']
+        fields = ['event', 'seats', 'payment_status','verified']
 
         extra_kwargs = {
             'payment_status': {'read_only': True},
+            'verified': {'read_only': True},
         }
 
 

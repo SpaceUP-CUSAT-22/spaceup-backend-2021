@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 import random
 
+from home.models import Volunteers
+
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -30,3 +32,6 @@ class Tokens(models.Model):
     def rest_token(self):
         self.private_token = create_new_id
         self.save()
+
+    def is_volunteer(self):
+        return Volunteers.objects.filter(user=self.user).exists()

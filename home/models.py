@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -43,6 +44,7 @@ year_select = (
 
 
 class Volunteers(models.Model):
+    user = models.ForeignKey(User, related_name='volunteer', on_delete=models.CASCADE)
     name = models.CharField(max_length=25)
     year_of_study = models.IntegerField(choices=year_select, default=2)
     course = models.CharField(max_length=45, choices=course_select)
@@ -50,5 +52,3 @@ class Volunteers(models.Model):
     mobile_number = models.CharField(max_length=12)
     profile = models.ImageField(upload_to='images/', null=True, blank=True)
     is_organiser = models.BooleanField(default=False)
-
-

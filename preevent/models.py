@@ -1,12 +1,11 @@
 import random
 import string
 
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
 
 from home.models import Mentors, Volunteers
-from django.contrib.auth.models import User
 
 event_types = (
     ("Game", "Game"),
@@ -39,6 +38,7 @@ class SeatBooking(models.Model):
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)
     payment_status = models.BooleanField(default=False)
     seats = models.PositiveIntegerField(default=1)
+    verified = models.BooleanField(default=False)
 
 
 def code_generator(size=10, chars=string.ascii_uppercase + string.digits):

@@ -1,6 +1,7 @@
 import django_filters
 from django.http import HttpResponseRedirect
 # from django.shortcuts import render
+from django.shortcuts import render
 from rest_framework import viewsets, permissions, filters, status
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
@@ -61,8 +62,13 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
     # TODO make this for vol
     @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAdminUser])
     def verify(self, request, *args, **kwargs):
-        token = request.data['token']
-        Tokens.objects.get(token=token)
+        if request.user.tokens.is_volunteer():
+            context = {}
+            return render(request, template_name="signup.html", context=context)
+        return render(request, template_name="signup.html", context=context)
+
+        # token = request.data['token']
+        # Tokens.objects.get(token=token)
 
 
 @api_view(["GET"])

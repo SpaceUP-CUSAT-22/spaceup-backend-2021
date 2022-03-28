@@ -4,7 +4,10 @@ import string
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models
-
+import qrcode
+from PIL import Image, ImageDraw
+from io import BytesIO
+from django.core.files import File
 from home.models import Mentors, Volunteers
 
 event_types = (
@@ -62,6 +65,18 @@ class SeatBooking(models.Model):
     transaction_id = models.CharField(max_length=10, default=create_new_transaction_id)
     payment_id = models.CharField(max_length=20, default="")
     date = models.DateField(auto_now=True, blank=True, null=True)
+    qrcode = models.ImageField(upload_to='images', blank=True, null=True)
+
+    def generate(self, *args, **kwargs):
+        qrcode_img = qrcode.make(f"https://api.spaceupcusat.org/preevent/seats/verify/?ticket={self.transaction_id}")
+        canvas = Image.new("RGB", (400, 400), "white")
+        draw = ImageDraw.Draw(canvas)
+        canvas.paste(qrcode_img)
+        buffer = BytesIO()
+        canvas.save(buffer, "PNG")
+        self.qrcode.save(f'{self.transaction_id}.png', File(buffer), save=False)
+        canvas.close()
+        super().save(*args, **kwargs)
 
 
 class TransactionDetails(models.Model):

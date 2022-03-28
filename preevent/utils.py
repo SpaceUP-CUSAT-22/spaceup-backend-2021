@@ -138,5 +138,6 @@ def handle_payment(transaction_id, payment_status):
         transaction_details.payment_status = payment_status
         logger.info(f"payment status {transaction_details.payment_status}")
         transaction_details.save()
+        transaction_details.generate()
     except Exception as ex:
         logger.critical(f"order not created exception {ex}")

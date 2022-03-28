@@ -64,33 +64,23 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAuthenticated])
     def verify(self, request, *args, **kwargs):
         context = {}
-        # if request.user.tokens.is_volunteer():
-        #     if request.method == "POST":
-        #         token = request.POST.get("token")
-        #         try:
-        #             user = Tokens.objects.get(private_token=token).user
-        #             for seat in SeatBooking.objects.filter(user=user):
-        #                 seat.verified = True
-        #                 seat.save()
-        #         except Tokens.DoesNotExist:
-        #             pass
-        #     try:
-        #         user = Tokens.objects.get(private_token=token).user
-        #         SeatBooking.objects.filter(user=user)
-        #         context['to_verify_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=False)]
-        #         context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]
-        #
-        #     except Tokens.DoesNotExist:
-        #         pass
-        #     return render(request, template_name="verify.html", context=context)
-        # context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]
-        # token = request.data.get('token')
-        # user = Tokens.objects.get(private_token=token).user
-        # seats = 0
-        # for seat in SeatBooking.objects.filter(user=user):
-        #     seats += seat.seats
-        # context['num_seats'] = seats
-        return render(request, template_name="seat_booking.html", context=context)
+        if request.method == "get":
+
+            ticket_id = request.data['ticket']
+            try:
+                seat = SeatBooking.objects.get(transaction_id=ticket_id)
+                context = {
+                    "seat_booking": seat,
+                }
+            except SeatBooking.DoesNotExist:
+                context['errr'] = "Invalid ticket"
+            return render(request, template_name="seat_booking.html", context=context)
+        else:
+            if request.user.tokens.is_volunteer():
+                ticket_id = request.post['ticket']
+                seat = SeatBooking.objects.get(transaction_id=ticket_id)
+                seat.verified = True
+                seat.save()
 
 
 @login_required

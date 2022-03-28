@@ -3,12 +3,11 @@ from oauth2_provider.contrib.rest_framework import TokenHasScope, OAuth2Authenti
 from rest_framework import viewsets, generics, permissions
 from rest_framework.decorators import action
 
-
 from .models import Tokens
 from rest_framework_social_oauth2.authentication import SocialAuthentication
 from .authentication import CsrfExemptSessionAuthentication
 from .permissions import IsOwner
-from .serializer import UserSerializer, GroupSerializer,GetTokensSerializer
+from .serializer import UserSerializer, GroupSerializer, GetTokensSerializer
 
 
 class UserApiViewSet(viewsets.ModelViewSet):
@@ -16,7 +15,7 @@ class UserApiViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     authentication_classes = [CsrfExemptSessionAuthentication, SocialAuthentication, OAuth2Authentication]
     queryset = User.objects.all()
-    http_method_names = ['get', "patch", "options", 'put']
+    http_method_names = ['get', "patch", "options", 'put', 'post']
 
     def get_queryset(self):
         try:
@@ -31,8 +30,9 @@ class UserApiViewSet(viewsets.ModelViewSet):
             self.queryset = self.queryset.filter(pk=request.user.pk)
         return viewsets.ModelViewSet.list(self, request, *args, **kwargs)
 
-    @action(detail=False, methods=["get", "post", 'patch', 'put'], url_path='me')
+    @action(detail=False, methods=["get", "post", 'patch', ], url_path='me')
     def me(self, request, *args, **kwargs):
+
         print(request.method)
         if request.method == "PATCH" or request.method == "PUT":
             print("patch is called")

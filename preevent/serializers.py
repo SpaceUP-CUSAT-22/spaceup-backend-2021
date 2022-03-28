@@ -16,7 +16,9 @@ class GetEventSerializer(serializers.ModelSerializer):
 class GetSeatBookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeatBooking
-        fields = ['event', 'seats', 'payment_status','verified']
+        fields = ['event', 'seats', 'payment_status',
+                  'verified','first_name','second_name',
+                  'email','institution','vegetarian']
 
         extra_kwargs = {
             'payment_status': {'read_only': True},

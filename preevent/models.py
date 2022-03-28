@@ -40,6 +40,12 @@ class SeatBooking(models.Model):
     seats = models.PositiveIntegerField(default=1)
     verified = models.BooleanField(default=False)
 
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    second_name = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(max_length=254, null=True, blank=True)
+    institution = models.CharField(max_length=50, null=True, blank=True)
+    vegetarian = models.BooleanField(default=False)
+
 
 def code_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))

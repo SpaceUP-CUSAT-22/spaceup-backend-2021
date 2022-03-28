@@ -65,7 +65,7 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
         context = {}
 
         if request.user.tokens.is_volunteer():
-            context['name'] = 'sunith'
+            context['name'] = 'devaprasad'
             return render(request, template_name="verify.html", context=context)
         return render(request, template_name="ticket.html", context=context)
 

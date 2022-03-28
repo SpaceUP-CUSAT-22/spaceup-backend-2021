@@ -320,6 +320,17 @@ body {
     }
 }
 
+.cusatmail:not(:checked) ~ .cusatid,
+.sedsmail:not(:checked) ~ .sedsid
+{
+    display: none !important;
+}
+
+.cusatmail:checked ~ .cusatid,
+.sedsmail:checked ~ .sedsid{
+    display: block !important;
+}
+
 
 
 

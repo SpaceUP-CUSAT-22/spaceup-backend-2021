@@ -59,37 +59,37 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
             return Response({"detail": "selected_seats must be a number greater than 0"},
                             status=status.HTTP_406_NOT_ACCEPTABLE)
 
+    # TODO make this for vol
     @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAuthenticated])
     def verify(self, request, *args, **kwargs):
         context = {}
-        if request.user.tokens.is_volunteer():
-            if request.method == "POST":
-                token = request.POST.get("token")
-                try:
-                    user = Tokens.objects.get(private_token=token).user
-                    for seat in SeatBooking.objects.filter(user=user):
-                        seat.verified = True
-                        seat.save()
-                except Tokens.DoesNotExist:
-                    pass
-            try:
-                token = request.data.get('token')
-                user = Tokens.objects.filter(private_token=token)
-                SeatBooking.objects.filter(user=user)
-                context['to_verify_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=False)]
-                context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]
-
-            except Tokens.DoesNotExist:
-                pass
-            return render(request, template_name="verify.html", context=context)
-        context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]
-        token = request.data.get('token')
-        user = Tokens.objects.get(private_token=token).user
-        seats = 0
-        for seat in SeatBooking.objects.filter(user=user):
-            seats += seat.seats
-        context['num_seats'] = seats
-        return render(request, template_name="ticket.html", context=context)
+        # if request.user.tokens.is_volunteer():
+        #     if request.method == "POST":
+        #         token = request.POST.get("token")
+        #         try:
+        #             user = Tokens.objects.get(private_token=token).user
+        #             for seat in SeatBooking.objects.filter(user=user):
+        #                 seat.verified = True
+        #                 seat.save()
+        #         except Tokens.DoesNotExist:
+        #             pass
+        #     try:
+        #         user = Tokens.objects.get(private_token=token).user
+        #         SeatBooking.objects.filter(user=user)
+        #         context['to_verify_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=False)]
+        #         context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]
+        #
+        #     except Tokens.DoesNotExist:
+        #         pass
+        #     return render(request, template_name="verify.html", context=context)
+        # context['verified_seats'] = [seat for seat in SeatBooking.objects.filter(user=user, verified=True)]
+        # token = request.data.get('token')
+        # user = Tokens.objects.get(private_token=token).user
+        # seats = 0
+        # for seat in SeatBooking.objects.filter(user=user):
+        #     seats += seat.seats
+        # context['num_seats'] = seats
+        return render(request, template_name="seat_booking.html", context=context)
 
 
 @api_view(["GET"])

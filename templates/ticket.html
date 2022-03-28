@@ -6,63 +6,46 @@
 
 {% block form %}
 
-    <div style="height: 100%; " class="col-md-4 pt-5" >
+ <div class="col-md-5 pt-5">
+   <div class="card mb-4" style="max-width: 540px;">
+  <div class="row no-gutters">
+    <div class="col m-4">
+      <img src="https://picsum.photos/1000/1000" class="card-img" alt="...">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Devaprasad N M</h5>
+        <p class="card-text">devaprasamohanGmail.com</p>
+        <p class="card-text"><small class="text-muted">7306290566</small></p>
+          <h5 class="card-title">Number of seats to be verified </h5>
+            <p class="card-text">8</p>
 
+      </div>
 
-        <div style="color:#fff;" class="row d-flex align-items-center mt-4">
-            <figure style="color: #ffffff " class="text-center"><h1 class="fw-bold">Login</h1>
-            </figure>
-            <form action="/login/?{{ request.META.QUERY_STRING }}"
-                  method="POST">
-                {% csrf_token %}
-                {% if pswderr %}
-                    <div class=" text-danger text-center" role="alert">
-                        <i class="fa fa-exclamation-circle"></i> {{ pswderr }}
-                    </div>
-                {% endif %}
-                <div class="input-fields ">
-
-                    <div class=" mb-4 d-flex flex-column  align-items-center ">
-                        <div class="mb-4 d-flex flex-column " style="width:350px;margin-right: auto;margin-left: auto ">
-                            {#                    <label  class="form-label input-label " for="email"  style="color: #ffffff " >Email or username * </label>#}
-                            <input name="email" type="text" id="email" placeholder="Enter email or username"
-                                   class="form-control  form-control-lg text-input mb-4" required
-                                   style=" color:#ffffff; background:rgba(6,2,60,0.43);border: 1px solid transparent ; height:70px"/>
-                            {#                    <label class="form-label input-label " for="password" style="color: #ffffff " >Password*</label>#}
-                            <div class="password-container">
-                                <input type="password" name="password" id="password" placeholder="Enter password"
-                                       class="form-control form-control-lg text-input password-input"
-                                       style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px "
-                                       required/>
-                                <span onclick="show_password('password','password-visibility')" class="visibility"
-                                      id="password-visibility">show</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-lg btn-block submit-btn">Login Account</button>
-                    </div>
-
-                    <div class="divider d-flex justify-content-center align-items-center my-4">
-                        <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
-                    </div>
-                    <div style="" class="d-flex justify-content-center">
-                        <a style="color: #ffffff; text-transform: none" class="btn btn-lg btn-block text-input"
-                           href="https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/userinfo.profile%20https%3A//www.googleapis.com/auth/userinfo.email&include_granted_scopes=true&response_type=code&state={{ request.META.QUERY_STRING|urlencode }}&redirect_uri={{ google_redirect_uri }}&client_id={{ GOOGLE_CLIENT_ID }}"
-                           role="button">
-                            <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in"
-                                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
-                            login with Google
-                        </a>
-
-                    </div>
-                    <div class=" text-center ">
-                        <p class="new-to"><a class="signin-link"
-                                             href="/signup?{{ request.META.QUERY_STRING }}">Register </a>
-                    </div>
-                </div>
-            </form>
-        </div>
 
     </div>
+
+
+      <div class="col-md-12">
+            <figcaption class="blockquote-footer text-warning">
+    <cite title="Source Title">Verfied Seats are</cite>
+  </figcaption>
+                <ul class="list-group">
+  <li class="list-group-item disabled">Total : 6 </li>
+
+</ul>
+
+      </div>
+
+
+  </div>
+</div>
+    </div>
+
+
+
+
+
+
+
 {% endblock %}

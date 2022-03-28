@@ -29,18 +29,46 @@
                     <input name="institution" type="tel" id="email" placeholder="Enter Institution / Company" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
 
 
+
                     <input type="text" id="form6" class="form-control hidden" placeholder="Invite Token" name="invite"
                        value="{{ invite }}">
                     <label class="form-label hidden" for="form6">Invite Token</label>
-                    <div class="form-check">
+
+                     <div class="form-check">
                       <input
                         class="form-check-input form-checkbox "
                         type="checkbox"
-                        id="flexCheckDefault"
+                        id="cusat"
                       />
-                      <label class="form-check-label" for="flexCheckDefault">
+                      <label class="form-check-label" for="cusat">
+                          Are you a Vegetarian?
+                      </label>
+
+                    </div>
+
+                    <div class="form-check">
+                      <input
+                        class="form-check-input form-checkbox cusatmail"
+                        type="checkbox"
+                        id="cusat"
+                      />
+                      <label class="form-check-label" for="cusat">
                           Are you Cusatian?
                       </label>
+                        <input name="cusat_email" type="email" id="cusat_email" placeholder="Enter Cusat email address" class="form-control form-control-lg cusatid text-input mb-4"  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+
+                    </div>
+                     <div class="form-check">
+                      <input
+                        class="form-check-input form-checkbox sedsmail"
+                        type="checkbox"
+                        id="seds"
+                      />
+                      <label class="form-check-label" for="seds">
+                          Are you a Seds Member ?
+                      </label>
+                        <input name="seds_email" type="email" id="seds_email" placeholder="Enter Seds email address" class="form-control form-control-lg sedsid text-input mb-4"   style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+
                     </div>
                 </div>
                 </div>

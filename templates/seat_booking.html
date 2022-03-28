@@ -1,0 +1,60 @@
+
+{% extends "root.html" %}
+{% block title %}
+    Register
+{% endblock %}
+{% block form %}
+  <div  class="col-md-4 mt-4 from-container ">
+
+
+        <form action="/signup/?{{ request.META.QUERY_STRING }}" method="POST">
+
+
+      <span class="text-center mb-5"><h2  style="color: #ffffff ;"  class="fw-bold mb-4" >Seat Booking </h2>
+          <p class="mt-2"> General Information </p>
+      </span>
+
+            <div class="input-fields " >
+                {% csrf_token %}
+
+
+                <div class=" mb-3 d-flex flex-column  align-items-center ">
+                <div class="mb-2 d-flex flex-column " style="width:350px;margin-right: auto;margin-left: auto ">
+                     <input name="first_name" type="text" id="first_name" placeholder="Enter First Name" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+                    <input name="second_name" type="text" id="second_name" placeholder="Enter Second Name" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+                    <input name="email" type="email" id="email" placeholder="Enter Email address" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+                    <input name="phone" type="tel" id="email" placeholder="Enter Phone Number" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+                    <input name="seat" type="number" id="email" placeholder="Enter the Number of Seats" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+
+                    <input name="institution" type="tel" id="email" placeholder="Enter Institution / Company" class="form-control  form-control-lg text-input mb-4" required  style="color:#ffffff;background:rgba(6,2,60,0.43); border: 1px solid transparent ;  height:70px"/>
+
+
+                    <input type="text" id="form6" class="form-control hidden" placeholder="Invite Token" name="invite"
+                       value="{{ invite }}">
+                    <label class="form-label hidden" for="form6">Invite Token</label>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input form-checkbox "
+                        type="checkbox"
+                        id="flexCheckDefault"
+                      />
+                      <label class="form-check-label" for="flexCheckDefault">
+                          Are you Cusatian?
+                      </label>
+                    </div>
+                </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-lg btn-block submit-btn" >BOOK SEAT</button>
+                </div>
+
+
+
+            <div class="already-container">
+                 <p  class="already"> Already have an account? <a class="signin-link" href="/login?{{ request.META.QUERY_STRING }}">Sign in</a>
+             </div>
+            </div>
+        </form>
+      </div>
+
+{% endblock %}

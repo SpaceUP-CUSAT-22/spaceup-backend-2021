@@ -11,4 +11,5 @@ router.register(r'seats', views.SeatBookingViewSet)
 urlpatterns = [
     path(r'', include(router.urls)),
     path(r'payment/', views.payment),
+    path(r'book/', views.book_seats),
 ]

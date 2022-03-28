@@ -1,4 +1,5 @@
 import django_filters
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 # from django.shortcuts import render
 from django.shortcuts import render
@@ -90,6 +91,30 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
         #     seats += seat.seats
         # context['num_seats'] = seats
         return render(request, template_name="seat_booking.html", context=context)
+
+
+@login_required
+def book_seats(request):
+    context1 = {}
+    if request.method == "POST":
+        event = Event.objects.filter().first()
+        first_name = request.POST.get('first_name')
+        second_name = request.POST.get('second_name')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        seats = request.POST.get('seat')
+        institution = request.POST.get('institution')
+        vegetarian = request.POST.get('vegetarian')
+        print(f'{vegetarian =}')
+        SeatBooking.objects.create(user=request.user, first_name=first_name, second_name=second_name, email=email,
+                                   phone_number=phone_number, seats=seats, institution=institution,
+                                   vegetarian=True if vegetarian == "on" else False)
+        print(f'{seats = }')
+        if int(seats) > 0:
+            payment_url, transaction_details = get_payment_link(request.user, int(seats) * event.booking_price,
+                                                                int(seats), event)
+            return HttpResponseRedirect(payment_url)
+    return render(request, template_name="seat_booking.html", context=context1)
 
 
 @api_view(["GET"])

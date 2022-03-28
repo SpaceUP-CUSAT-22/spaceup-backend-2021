@@ -95,7 +95,6 @@ def get_payment_link(user, amount, seats, event=None):
         return [False, False]
 
 
-
 def verify_signature(request):
     logger.info("Signature verification taking place")
     try:
@@ -135,13 +134,9 @@ def cancel_payment_link(seat, pid):
 def handle_payment(transaction_id, payment_status):
     try:
         logger.info(transaction_id)
-        transaction_details = TransactionDetails.objects.get(transaction_id=transaction_id)
+        transaction_details = SeatBooking.objects.get(transaction_id=transaction_id)
         transaction_details.payment_status = payment_status
         logger.info(f"payment status {transaction_details.payment_status}")
         transaction_details.save()
-        SeatBooking.objects.create(user=transaction_details.user,
-                                   payment_status=True,
-                                   seats=transaction_details.seats,
-                                   event=transaction_details.event)
     except Exception as ex:
         logger.critical(f"order not created exception {ex}")

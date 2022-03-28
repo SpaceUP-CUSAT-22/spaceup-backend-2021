@@ -15,6 +15,20 @@ event_types = (
 )
 
 
+def code_generator(size=10, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def create_new_transaction_id():
+    not_unique = True
+    unique_code = code_generator()
+    while not_unique:
+        unique_code = code_generator()
+        if not TransactionDetails.objects.filter(transaction_id=unique_code):
+            not_unique = False
+    return str(unique_code)
+
+
 class Event(models.Model):
     title = models.CharField(max_length=25)
     type = models.CharField(max_length=20, choices=event_types)
@@ -39,26 +53,15 @@ class SeatBooking(models.Model):
     payment_status = models.BooleanField(default=False)
     seats = models.PositiveIntegerField(default=1)
     verified = models.BooleanField(default=False)
-
     first_name = models.CharField(max_length=100, null=True, blank=True)
     second_name = models.CharField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=12, null=True, blank=True)
     email = models.EmailField(max_length=254, null=True, blank=True)
     institution = models.CharField(max_length=50, null=True, blank=True)
     vegetarian = models.BooleanField(default=False)
-
-
-def code_generator(size=10, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
-
-
-def create_new_transaction_id():
-    not_unique = True
-    unique_code = code_generator()
-    while not_unique:
-        unique_code = code_generator()
-        if not TransactionDetails.objects.filter(transaction_id=unique_code):
-            not_unique = False
-    return str(unique_code)
+    transaction_id = models.CharField(max_length=10, default=create_new_transaction_id)
+    payment_id = models.CharField(max_length=20, default="")
+    date = models.DateField(auto_now=True, blank=True, null=True)
 
 
 class TransactionDetails(models.Model):

@@ -16,6 +16,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from oauth2_provider.models import AccessToken, Application
 
 from authentication.models import Tokens
+from preevent.models import SeatBooking
 
 logger = logging.getLogger('auth')
 
@@ -148,6 +149,20 @@ def log_out(request):
     logout(request)
     url = '/?' + request.META['QUERY_STRING']
     return HttpResponseRedirect(url)
+
+
+@login_required
+def index(request):
+    context = {"count": 0}
+    try:
+        seat = SeatBooking.objects.filter(user=request.user).first()
+        context['cusat_mail'] = seat.cusat_email
+        context['seds_email'] = seat.seds_email
+        context['Institution'] = seat.institution
+        context['count'] = SeatBooking.objects.filter(user=request.user).count()
+    except Exception as e:
+        print(e)
+    return render(request, template_name="dashboard_profile.html", context=context)
 
 
 def request_google(auth_code, redirect_uri):

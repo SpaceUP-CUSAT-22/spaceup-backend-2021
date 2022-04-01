@@ -1,20 +1,28 @@
 {% extends 'dashboard.html' %}
 {% block content %}
 
-<div class="card">
-  <div class="card-header">
-    Profile
-  </div>
-  <div class="card-body">
-    <h5 class="card-title">Devaprasad</h5>
-      <p class="card-text">devaprasadmohan@gmail.com</p>
-      <p class="card-text">7306290566</p>
-      <p class="card-text">Cusat email id</p>
-      <p class="card-text">Seds email id</p>
-      <p class="card-text">Institution</p>
-      <p class="card-text text-warning">8 Tickets booked</p>
+    <div class="card">
+        <div class="card-header">
+            Profile
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ request.user.username }}</h5>
+            <p class="card-text">{{ request.user.email }}</p>
+            <p class="card-text">{{ request.user.tokens.phone_number }}</p>
+            {% if cusat_email %}
+                <p class="card-text">{{ cusat_email }}</p>
+            {% endif %}
+
+            {% if seds_email %}
+                <p class="card-text">{{ seds_email }}</p>
+            {% endif %}
+              {% if Institution %}
+                <p class="card-text">{{ Institution }}</p>
+            {% endif %}
+            <p class="card-text text-warning">{{ count }} Tickets booked</p>
+        <a class="btn btn-primary" href="/preevent/book">Book a Ticket </a>
 
 
-  </div>
-</div>
+        </div>
+    </div>
 {% endblock %}

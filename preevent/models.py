@@ -60,6 +60,8 @@ class SeatBooking(models.Model):
     second_name = models.CharField(max_length=100, null=True, blank=True)
     phone_number = models.CharField(max_length=12, null=True, blank=True)
     email = models.EmailField(max_length=254, null=True, blank=True)
+    cusat_email = models.EmailField(max_length=254, null=True, blank=True)
+    seds_email = models.EmailField(max_length=254, null=True, blank=True)
     institution = models.CharField(max_length=50, null=True, blank=True)
     vegetarian = models.BooleanField(default=False)
     transaction_id = models.CharField(max_length=10, default=create_new_transaction_id)

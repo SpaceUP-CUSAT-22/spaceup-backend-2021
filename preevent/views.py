@@ -92,7 +92,7 @@ def book_seats(request):
         second_name = request.POST.get('second_name')
         email = request.POST.get('email')
         phone_number = request.POST.get('phone_number')
-        seats = request.POST.get('seat')
+        seats = 1
         institution = request.POST.get('institution')
         vegetarian = request.POST.get('vegetarian')
         print(f'{vegetarian =}')

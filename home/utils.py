@@ -138,11 +138,10 @@ class BulkEmail(threading.Thread):
     def run(self):
         count = 0
         for i in self.objects:
-            # print(i[1])
             thre = EmailThread(sub, content_new, [i.email], i)
             thre.start()
             thre.join()
-            time.sleep(3)
+            time.sleep(10)
             if count > 50:
                 time.sleep(200)
                 count = 0

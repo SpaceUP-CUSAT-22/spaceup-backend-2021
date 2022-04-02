@@ -61,26 +61,31 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_406_NOT_ACCEPTABLE)
 
     # TODO make this for vol
-    @action(detail=False, methods=["get"], url_path='verify', permission_classes=[permissions.IsAuthenticated])
+    @action(detail=False, methods=["get"], url_path='verify',
+            permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def verify(self, request, *args, **kwargs):
         context = {}
-        if request.method == "get":
-
-            ticket_id = request.data['ticket']
-            try:
-                seat = SeatBooking.objects.get(transaction_id=ticket_id)
-                context = {
-                    "seat_booking": seat,
-                }
-            except SeatBooking.DoesNotExist:
-                context['errr'] = "Invalid ticket"
-            return render(request, template_name="seat_booking.html", context=context)
-        else:
-            if request.user.tokens.is_volunteer():
-                ticket_id = request.post['ticket']
-                seat = SeatBooking.objects.get(transaction_id=ticket_id)
-                seat.verified = True
-                seat.save()
+        print(request.data, request.GET)
+        ticket_id = request.GET['ticket']
+        try:
+            seat = SeatBooking.objects.get(transaction_id=ticket_id)
+            context = {
+                "seat_booking": seat,
+            }
+        except SeatBooking.DoesNotExist:
+            context['errr'] = "Invalid ticket"
+        if request.user.is_authenticated and request.user.tokens.is_volunteer():
+            return render(request, template_name="dashboard_tickets.html", context=context)
+        return render(request, template_name="dashboard_tickets.html", context=context)
+        # if request.method == "get":
+        #
+        #
+        # else:
+        #     if request.user.tokens.is_volunteer():
+        #         ticket_id = request.post['ticket']
+        #         seat = SeatBooking.objects.get(transaction_id=ticket_id)
+        #         seat.verified = True
+        #         seat.save()
 
 
 @login_required

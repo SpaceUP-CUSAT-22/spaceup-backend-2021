@@ -1,6 +1,10 @@
-{% extends 'ticket_dash.html' %}
-{% block content %}
-    {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>spaceup cusat</title>
 
     <style>
         .ticket-container {
@@ -47,21 +51,19 @@
             font-weight: bold;
         }
     </style>
-    {% if errr %}
-        <div>errrrrrrrrrrrr</div>
-    {% else %}
-        <div class="position-relative ticket-container">
-            <img class="ticket-template" src="{% static 'img/ticket.jpg' %}" alt="ticket template"/>
-            <div class="qr-code">
-                <img class="w-100 bg-light"
-                     src={{ seat_booking.qrcode.url }}
-                     alt="QR-Code">
-            </div>
-            <div class="ticket-content">
-                <h3>{{ seat_booking.transaction_id }}</h3>
-                <h2>{{ seat_booking.first_name }}</h2>
-            </div>
-        </div>
-    {% endif %}
-
-{% endblock %}
+</head>
+<body style="margin:0;padding:0;">
+<div class="position-relative ticket-container">
+    <img class="ticket-template" src="https://api.spaceupcusat.org/static/img/ticket.jpg" alt="ticket template"/>
+    <div class="qr-code">
+        <img class="w-100 bg-light"
+             src="https://api.spaceupcusat.org/media/images/DP76EDM1OH.png"
+             alt="QR-Code">
+    </div>
+    <div class="ticket-content">
+        <h3>ticket id</h3>
+        <h2>name</h2>
+    </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import random
 import string
+import threading
 
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
@@ -8,7 +9,11 @@ import qrcode
 from PIL import Image, ImageDraw
 from io import BytesIO
 from django.core.files import File
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from home.models import Mentors, Volunteers
+import pandas as pd
 
 event_types = (
     ("Game", "Game"),
@@ -51,7 +56,7 @@ class Event(models.Model):
 
 
 class SeatBooking(models.Model):
-    user = models.ForeignKey(User, related_name='booking', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='booking', on_delete=models.CASCADE, blank=True, null=True)
     event = models.ForeignKey(Event, on_delete=models.SET_NULL, blank=True, null=True)
     payment_status = models.BooleanField(default=False)
     seats = models.PositiveIntegerField(default=1)
@@ -61,6 +66,8 @@ class SeatBooking(models.Model):
     phone_number = models.CharField(max_length=12, null=True, blank=True)
     email = models.EmailField(max_length=254, null=True, blank=True)
     cusat_email = models.EmailField(max_length=254, null=True, blank=True)
+    cusatian = models.BooleanField(default=False)
+    seds_member = models.BooleanField(default=False)
     seds_email = models.EmailField(max_length=254, null=True, blank=True)
     institution = models.CharField(max_length=50, null=True, blank=True)
     vegetarian = models.BooleanField(default=False)
@@ -68,10 +75,14 @@ class SeatBooking(models.Model):
     payment_id = models.CharField(max_length=20, default="")
     date = models.DateField(auto_now=True, blank=True, null=True)
     qrcode = models.ImageField(upload_to='images', blank=True, null=True)
+    amount = models.PositiveIntegerField(default=0)
+
+    def get_url(self):
+        return f"https://api.spaceupcusat.org/preevent/seats/verify/?ticket={self.transaction_id}"
 
     def generate(self, *args, **kwargs):
         qrcode_img = qrcode.make(f"https://api.spaceupcusat.org/preevent/seats/verify/?ticket={self.transaction_id}")
-        canvas = Image.new("RGB", (400, 400), "white")
+        canvas = Image.new("RGB", (450, 450), "white")
         draw = ImageDraw.Draw(canvas)
         canvas.paste(qrcode_img)
         buffer = BytesIO()
@@ -100,3 +111,14 @@ class TransactionDetails(models.Model):
 class Question(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     question = models.TextField()
+
+
+class DataRazorpay(models.Model):
+    file = models.FileField(upload_to="images")
+
+
+# def populate_data(instance):
+@receiver(post_save, sender=SeatBooking)
+def create(sender, instance, created, **kwargs):
+    if created:
+        instance.generate()

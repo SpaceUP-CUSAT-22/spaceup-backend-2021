@@ -1,7 +1,7 @@
 import hashlib
 import hmac
 import logging
-
+from pandas import read_excel
 import requests
 from requests.auth import HTTPBasicAuth
 
@@ -37,7 +37,6 @@ def get_payment_link(user, amount, seats, event=None):
     call_back_url = settings.webhook_call_back_url
     key_id = settings.razorpay_key_id
     cancel_last_payment_links(user)
-
     transaction_details = TransactionDetails(user=user,
                                              total=amount, seats=seats, event=event)
     transaction_details.save()
@@ -141,6 +140,5 @@ def handle_payment(transaction_id, payment_status):
         transaction_details.generate()
     except Exception as ex:
         logger.critical(f"order not created exception {ex}")
-
 
 

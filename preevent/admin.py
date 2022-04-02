@@ -1,20 +1,21 @@
+import threading
+
 from django.contrib import admin, messages
 
 # Register your models here.
-from .models import Event, SeatBooking, TransactionDetails
+from .models import Event, SeatBooking, TransactionDetails, DataRazorpay
+from home.utils import send_bulk_async_mail
 
 admin.site.register(Event)
-# admin.site.register()
+admin.site.register(DataRazorpay)
 admin.site.register(TransactionDetails)
-
-
-def generate_qr(request, queryset):
-    for booking in queryset:
-        booking.generate()
-    messages.success(request, "QR Generated successfully")
 
 
 @admin.register(SeatBooking)
 class DistrictAdmin(admin.ModelAdmin):
     list_display = ("first_name", "phone_number", "email", 'payment_status')
-    actions = ['generate_qr',]
+    actions = ['send_mail', ]
+
+    @staticmethod
+    def send_mail(self, _, queryset):
+        threading.Thread(target=send_bulk_async_mail, args=(queryset,)).start()

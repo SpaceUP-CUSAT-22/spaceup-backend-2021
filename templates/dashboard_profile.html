@@ -6,23 +6,63 @@
             Profile
         </div>
         <div class="card-body">
-            <h5 class="card-title">{{ request.user.username }}</h5>
-            <p class="card-text">{{ request.user.email }}</p>
-            <p class="card-text">{{ request.user.tokens.phone_number }}</p>
-            {% if cusat_email %}
-                <p class="card-text">{{ cusat_email }}</p>
-            {% endif %}
+            {% if not seat_booking %}
+                <h5 class="card-title">{{ request.user.username }}</h5>
+                <p class="card-text">{{ request.user.email }}</p>
+                <p class="card-text">{{ request.user.tokens.phone_number }}</p>
+                {% if cusat_email %}
+                    <p class="card-text">{{ cusat_email }}</p>
+                {% endif %}
 
-            {% if seds_email %}
-                <p class="card-text">{{ seds_email }}</p>
-            {% endif %}
-              {% if Institution %}
-                <p class="card-text">{{ Institution }}</p>
-            {% endif %}
-            <p class="card-text text-warning">{{ count }} Tickets booked</p>
-        <a class="btn btn-primary" href="/preevent/book">Book a Ticket </a>
+                {% if seds_email %}
+                    <p class="card-text">{{ seds_email }}</p>
+                {% endif %}
+                {% if Institution %}
+                    <p class="card-text">{{ Institution }}</p>
+                {% endif %}
+                <p class="card-text text-warning">{{ count }} Tickets booked</p>
+                <a class="btn btn-primary" href="/preevent/book">Book a Ticket </a>
+                {% if staff %}
+                    <h5 class="card-title">Registration details</h5>
+                    <p class="card-text">verified seats: {{ verified_seats }}</p>
+                    <p class="card-text">to be verified: {{ to_be_verified }}</p>
+                    <p class="card-text">spot registration: {{ spot_registration }}</p>
+                    <p class="card-text">vegetarian: {{ vegetarian }}</p>
+                {% endif %}
+            {% else %}
+                <form action="/preevent/seats/verify/?ticket={{ seat_booking.transaction_id }}" method="POST">
+                    {% csrf_token %}
+                    <h5 class="card-title">First name: {{ seat_booking.first_name }}</h5>
+                    <p class="card-text">email: {{ seat_booking.email }}</p>
+                    <p class="card-text">ticket: {{ seat_booking.transaction_id }}</p>
+                    <p class="card-text">Phone number: {{ seat_booking.phone_number }}</p>
+                    {% if seat_booking.cusatian %}
+                        <p class="card-text">cusat student</p>
+                    {% endif %}
+                    {% if seat_booking.seds_member %}
+                        <p class="card-text">Seds member</p>
+                    {% endif %}
+                    <p class="card-text">Institution: {{ seat_booking.institution }}</p>
+                    {% if seat_booking.vegetarian %}
+                        <p class="card-text" style="color: green">vegetarian</p>
+                    {% else %}
+                        <p class="card-text" style="color: orangered">non-vegetarian</p>
 
+                    {% endif %}
+                    <p class="card-text">Amount paid: {{ seat_booking.amount }}</p>
 
+                    {% if seat_booking.verified_seats %}
+                        <p class="card-text">number of Verified seats: {{ seat_booking.verified_seats }}</p>
+                    {% endif %}
+                    <p class="card-text">number of seats to be verified: {{ seat_booking.seats_to_be_verified }}</p>
+
+                    {% if seat_booking.seats > seat_booking.verified_seats %}
+                        <button type="submit" class="btn btn btn-primary">Verify</button>
+                    {% else %}
+                        <button disabled type="submit" class="btn btn btn-primary">Already Verified</button>
+                    {% endif %}
+                </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

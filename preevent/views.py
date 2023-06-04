@@ -61,22 +61,32 @@ class SeatBookingViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_406_NOT_ACCEPTABLE)
 
     # TODO make this for vol
-    @action(detail=False, methods=["get"], url_path='verify',
+    @action(detail=False, methods=["get", "post"], url_path='verify',
             permission_classes=[permissions.IsAuthenticatedOrReadOnly])
     def verify(self, request, *args, **kwargs):
+        if request.method == "POST":
+            if request.user.is_authenticated and request.user.tokens.is_volunteer():
+                ticket_id = request.GET['ticket']
+                seat = SeatBooking.objects.get(transaction_id=ticket_id)
+                if seat.verified_seats < seat.seats:
+                    seat.verified_seats += 1
+                    seat.verified = True
+                seat.save()
         context = {}
-        print(request.data, request.GET)
+
         ticket_id = request.GET['ticket']
         try:
             seat = SeatBooking.objects.get(transaction_id=ticket_id)
             context = {
+
                 "seat_booking": seat,
             }
         except SeatBooking.DoesNotExist:
             context['errr'] = "Invalid ticket"
         if request.user.is_authenticated and request.user.tokens.is_volunteer():
-            return render(request, template_name="dashboard_tickets.html", context=context)
+            return render(request, template_name="dashboard_profile.html", context=context)
         return render(request, template_name="dashboard_tickets.html", context=context)
+
         # if request.method == "get":
         #
         #

@@ -76,6 +76,12 @@ class SeatBooking(models.Model):
     date = models.DateField(auto_now=True, blank=True, null=True)
     qrcode = models.ImageField(upload_to='images', blank=True, null=True)
     amount = models.PositiveIntegerField(default=0)
+    verified_seats = models.PositiveIntegerField(default=0)
+    spot_registration = models.BooleanField(default=False)
+
+    @property
+    def seats_to_be_verified(self):
+        return self.seats - self.verified_seats
 
     def get_url(self):
         return f"https://api.spaceupcusat.org/preevent/seats/verify/?ticket={self.transaction_id}"

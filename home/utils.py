@@ -151,3 +151,4 @@ class BulkEmail(threading.Thread):
 
 def send_bulk_async_mail(seats):
     BulkEmail(seats).start()
+

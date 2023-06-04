@@ -4,7 +4,7 @@ from preevent.models import SeatBooking
 
 def create():
     # SeatBooking.objects.all().delete()
-    sheet = read_excel(open("payments.xlsx", 'rb'))
+    sheet = read_excel(open("payment.xlsx", 'rb'))
     print(sheet)
     count = 0
     for record in sheet.values:
@@ -20,4 +20,4 @@ def create():
 
     print(count)
 
-create()
+# create()

@@ -154,6 +154,13 @@ def log_out(request):
 @login_required
 def index(request):
     context = {"count": 0}
+    if request.user.tokens.is_volunteer():
+        context["staff"] = True
+        context["verified_seats"] = SeatBooking.objects.filter(verified=True).count()
+        context["to_be_verified"] = SeatBooking.objects.filter(verified=False).count()
+        context["spot_registration"] = SeatBooking.objects.filter(spot_registration=True, verified=True).count()
+        context["vegetarian"] = SeatBooking.objects.filter(verified=True, vegetarian=True).count()
+        context["non-vegetarian"] = SeatBooking.objects.filter(verified=True, vegetarian=False).count()
     try:
         seat = SeatBooking.objects.filter(user=request.user).first()
         context['cusat_mail'] = seat.cusat_email
